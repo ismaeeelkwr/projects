@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(OPERATOR)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  OPERATOR
+}
+
+model Plan {
+  id             Int       @id @default(autoincrement())
+  name           String
+  priceNGN       Int
+  validitySeconds Int
+  dataLimitMB    Int?
+  maxConcurrent  Int       @default(1)
+  active         Boolean   @default(true)
+  vouchers       Voucher[]
+}
+
+model Order {
+  id               Int         @id @default(autoincrement())
+  paystackReference String     @unique
+  email            String?
+  amountKobo       Int
+  status           OrderStatus @default(PENDING)
+  metadata         Json?
+  vouchers         Voucher[]
+  createdAt        DateTime    @default(now())
+}
+
+enum OrderStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model Voucher {
+  id              Int           @id @default(autoincrement())
+  code            String        @unique
+  planId          Int
+  status          VoucherStatus @default(UNREDEEMED)
+  validitySeconds Int
+  expiresAt       DateTime?
+  activatedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  plan            Plan          @relation(fields: [planId], references: [id])
+  order           Order?        @relation(fields: [orderId], references: [id])
+  orderId         Int?
+}
+
+enum VoucherStatus {
+  UNREDEEMED
+  ACTIVE
+  USED
+  EXPIRED
+}
+
+model SessionLog {
+  id        Int      @id @default(autoincrement())
+  clientMac String
+  clientIp  String
+  ssid      String?
+  apId      String?
+  nasId     String?
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+  result    String
+  voucherId Int?
+  voucher   Voucher? @relation(fields: [voucherId], references: [id])
+}
+
+model WanStatus {
+  id        Int      @id @default(autoincrement())
+  isUp      Boolean
+  latencyMs Float
+  downMbps  Float?
+  upMbps    Float?
+  checkedAt DateTime @default(now())
+}

@@ -1,0 +1,19 @@
+{
+  "name": "kwr-voucher-portal",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "dev": "pnpm --parallel --stream dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "format": "prettier --write .",
+    "package:zip": "node scripts/package-release.mjs"
+  },
+  "devDependencies": {
+    "archiver": "7.0.1",
+    "prettier": "3.2.5",
+    "prisma": "5.10.2",
+    "typescript": "5.4.5"
+  }
+}

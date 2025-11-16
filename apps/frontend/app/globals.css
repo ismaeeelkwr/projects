@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-primary: #0a84ff;
+  --brand-surface: #111827;
+  --brand-muted: #f3f4f6;
+}
+
+body {
+  background: var(--brand-muted);
+  color: #0b1220;
+  min-height: 100vh;
+}
