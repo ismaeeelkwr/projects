@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kwr_db
+      POSTGRES_USER: kwr_user
+      POSTGRES_PASSWORD: kwr_pass
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  redis:
+    image: redis:7
+    restart: unless-stopped
+  backend:
+    build:
+      context: ..
+      dockerfile: apps/backend/Dockerfile
+    env_file: ../.env
+    depends_on:
+      - db
+      - redis
+  frontend:
+    build:
+      context: ..
+      dockerfile: apps/frontend/Dockerfile
+    env_file: ../.env
+    depends_on:
+      - backend
+  caddy:
+    image: caddy:2.7
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  db-data:
+  caddy-data:
