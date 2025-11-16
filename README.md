@@ -30,7 +30,17 @@ Set the environment variables for Postgres, Redis, Paystack, Huawei controller, 
 
 ### Downloadable ZIP bundle
 - Generate an exportable archive at any time with `pnpm package:zip`. The script writes `release/kwr-networks-portal.zip` locally while automatically excluding `node_modules`, `.git`, build artifacts, and prior release bundles.
+- The archive now nests everything under a top-level `KWRNetworks/` directory so you can unzip and push straight into [`github.com/ismaeeelkwr/KWRNetworks`](https://github.com/ismaeeelkwr/KWRNetworks) without any extra rearranging.
 - Because the ZIP can be large and triggers "binary files are not supported" errors on GitHub, it is ignored from version control—run the command whenever you need a fresh copy to share or deploy.
+- After extracting the ZIP, initialize Git and point it at the public repo:
+  ```bash
+  cd KWRNetworks
+  git init
+  git remote add origin https://github.com/ismaeeelkwr/KWRNetworks
+  git add .
+  git commit -m "Initial import"
+  git push -u origin main
+  ```
 
 ### Local development
 ```bash

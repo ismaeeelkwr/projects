@@ -19,7 +19,11 @@ const finalizeArchive = new Promise((resolve, reject) => {
 });
 
 archive.pipe(output);
-archive.glob("**/*", { cwd: rootDir, dot: true, ignore });
+archive.glob(
+  "**/*",
+  { cwd: rootDir, dot: true, ignore },
+  { prefix: "KWRNetworks/" }
+);
 await archive.finalize();
 await finalizeArchive;
 
